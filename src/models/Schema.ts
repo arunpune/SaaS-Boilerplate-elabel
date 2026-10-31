@@ -1,4 +1,5 @@
-import { boolean, integer, pgTable, serial, text, timestamp, varchar } from 'drizzle-orm/pg-core';
+import { relations } from 'drizzle-orm';
+import { boolean, index, integer, pgTable, serial, text, timestamp, uniqueIndex, varchar } from 'drizzle-orm/pg-core';
 import { z } from 'zod';
 
 export const users = pgTable('users', {
@@ -43,7 +44,7 @@ export const products = pgTable('products', {
   imageUrl: text('image_url'),
   createdAt: timestamp('created_at').defaultNow(),
   updatedAt: timestamp('updated_at').defaultNow(),
-  createdBy: integer('created_by'),
+  createdBy: text('created_by'),
 });
 
 export const ingredients = pgTable('ingredients', {
@@ -55,8 +56,49 @@ export const ingredients = pgTable('ingredients', {
   details: text('details'),
   createdAt: timestamp('created_at').defaultNow(),
   updatedAt: timestamp('updated_at').defaultNow(),
-  createdBy: integer('created_by'),
+  createdBy: text('created_by'),
 });
+
+export const productIngredients = pgTable(
+  'product_ingredients',
+  {
+    id: serial('id').primaryKey(),
+    productId: integer('product_id')
+      .notNull()
+      .references(() => products.id, { onDelete: 'cascade' }),
+    ingredientId: integer('ingredient_id')
+      .notNull()
+      .references(() => ingredients.id, { onDelete: 'cascade' }),
+    createdAt: timestamp('created_at').defaultNow(),
+  },
+  table => ({
+    productIngredientUnique: uniqueIndex('product_ingredient_unique_idx').on(
+      table.productId,
+      table.ingredientId,
+    ),
+    productIdIdx: index('product_ingredients_product_id_idx').on(table.productId),
+    ingredientIdIdx: index('product_ingredients_ingredient_id_idx').on(table.ingredientId),
+  }),
+);
+
+export const productsRelations = relations(products, ({ many }) => ({
+  productIngredients: many(productIngredients),
+}));
+
+export const ingredientsRelations = relations(ingredients, ({ many }) => ({
+  productIngredients: many(productIngredients),
+}));
+
+export const productIngredientsRelations = relations(productIngredients, ({ one }) => ({
+  product: one(products, {
+    fields: [productIngredients.productId],
+    references: [products.id],
+  }),
+  ingredient: one(ingredients, {
+    fields: [productIngredients.ingredientId],
+    references: [ingredients.id],
+  }),
+}));
 
 export const insertUserSchema = z.object({
   username: z.string().min(1),
@@ -81,21 +123,26 @@ export const registerSchema = z
     path: ['confirmPassword'],
   });
 
+const stringOrNumberNullish = z
+  .union([z.string(), z.number()])
+  .transform(val => String(val))
+  .nullish();
+
 export const insertProductSchema = z.object({
   name: z.string().min(1),
   brand: z.string().nullish(),
   netVolume: z.string().nullish(),
-  vintage: z.string().nullish(),
+  vintage: stringOrNumberNullish,
   wineType: z.string().nullish(),
   sugarContent: z.string().nullish(),
   appellation: z.string().nullish(),
-  alcoholContent: z.string().nullish(),
+  alcoholContent: stringOrNumberNullish,
   packagingGases: z.string().nullish(),
   portionSize: z.string().nullish(),
-  kcal: z.string().nullish(),
-  kj: z.string().nullish(),
-  fat: z.string().nullish(),
-  carbohydrates: z.string().nullish(),
+  kcal: stringOrNumberNullish,
+  kj: stringOrNumberNullish,
+  fat: stringOrNumberNullish,
+  carbohydrates: stringOrNumberNullish,
   organic: z.boolean().nullish(),
   vegetarian: z.boolean().nullish(),
   vegan: z.boolean().nullish(),
@@ -104,12 +151,13 @@ export const insertProductSchema = z.object({
   operatorAddress: z.string().nullish(),
   operatorInfo: z.string().nullish(),
   countryOfOrigin: z.string().nullish(),
-  sku: z.string().nullish(),
+  sku: stringOrNumberNullish,
   ean: z.string().nullish(),
   externalLink: z.string().nullish(),
   redirectLink: z.string().nullish(),
   imageUrl: z.string().nullish(),
-  createdBy: z.number().nullish(),
+  createdBy: stringOrNumberNullish,
+  ingredientIds: z.array(z.number()).optional(),
 });
 
 export const importProductSchema = z.object({
@@ -161,7 +209,11 @@ export const importProductSchema = z.object({
   externalLink: z.string().optional(),
   redirectLink: z.string().optional(),
   imageUrl: z.string().optional(),
-  createdBy: z.number().optional(),
+  createdBy: z
+    .union([z.string(), z.number()])
+    .transform(val => String(val))
+    .optional(),
+  ingredientIds: z.array(z.number()).optional(),
 });
 
 export const insertIngredientSchema = z.object({
@@ -170,9 +222,18 @@ export const insertIngredientSchema = z.object({
   eNumber: z.string().nullish(),
   allergens: z.array(z.string()).nullish(),
   details: z.string().nullish(),
-  createdBy: z.number().nullish(),
+  createdBy: z
+    .union([z.string(), z.number()])
+    .transform(val => String(val))
+    .nullish(),
+});
+
+export const insertProductIngredientSchema = z.object({
+  productId: z.number(),
+  ingredientId: z.number(),
 });
 
 export type User = typeof users.$inferSelect;
 export type Product = typeof products.$inferSelect;
 export type Ingredient = typeof ingredients.$inferSelect;
+export type ProductIngredient = typeof productIngredients.$inferSelect;

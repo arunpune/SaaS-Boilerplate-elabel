@@ -40,7 +40,6 @@
     "types": ["vitest/globals"],
 
     // Path aliases
-    "baseUrl": ".",
     "paths": {
       "@/*": ["./src/*"],
       "@/public/*": ["./public/*"]

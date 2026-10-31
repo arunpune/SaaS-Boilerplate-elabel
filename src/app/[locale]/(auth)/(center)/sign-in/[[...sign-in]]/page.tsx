@@ -1,6 +1,5 @@
+import { SignIn } from '@clerk/nextjs';
 import { getTranslations } from 'next-intl/server';
-
-import SignInForm from './SignInForm';
 
 export async function generateMetadata(props: { params: { locale: string } }) {
   const t = await getTranslations({
@@ -15,7 +14,15 @@ export async function generateMetadata(props: { params: { locale: string } }) {
 }
 
 const SignInPage = (props: { params: { locale: string } }) => {
-  return <SignInForm locale={props.params.locale} />;
+  const fallbackRedirectUrl = props.params.locale === 'en'
+    ? '/dashboard'
+    : `/${props.params.locale}/dashboard`;
+
+  return (
+    <SignIn
+      fallbackRedirectUrl={fallbackRedirectUrl}
+    />
+  );
 };
 
 export default SignInPage;

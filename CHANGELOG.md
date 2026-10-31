@@ -1,3 +1,59 @@
+## [1.0.7](https://github.com/pranavbhandare31/Wine_lable/compare/v1.0.6...v1.0.7) (2026-10-17)
+
+
+### Bug Fixes
+
+* **i18n:** preserve locale prefixes in auth redirects ([25c1519](https://github.com/pranavbhandare31/Wine_lable/commit/25c151938c6ade85bc02d74c13956dd5b156107b))
+
+## [1.0.6](https://github.com/pranavbhandare31/Wine_lable/compare/v1.0.5...v1.0.6) (2026-10-17)
+
+
+### Bug Fixes
+
+* **auth:** harden middleware routing, preserve i18n locales, and fix dashboard navigation ([d9d71be](https://github.com/pranavbhandare31/Wine_lable/commit/d9d71be61331337ad935433d9f75468a812753c7))
+
+## [1.0.5](https://github.com/pranavbhandare31/Wine_lable/compare/v1.0.4...v1.0.5) (2026-10-17)
+
+
+### Bug Fixes
+
+* resolve server-component localization, add localized 404, harden auth rejections, and optimize db initialization ([28b5446](https://github.com/pranavbhandare31/Wine_lable/commit/28b5446f90dfbd6b93f8f767d7abf2668121ca20))
+
+## [1.0.4](https://github.com/pranavbhandare31/Wine_lable/compare/v1.0.3...v1.0.4) (2026-10-17)
+
+
+### Bug Fixes
+
+* harden database persistence, ownership authorization, validation resilience, and workflows ([7e2ff1d](https://github.com/pranavbhandare31/Wine_lable/commit/7e2ff1d98dbd476b4a93ee3296332850c3453d00))
+
+## [1.0.3](https://github.com/pranavbhandare31/Wine_lable/compare/v1.0.2...v1.0.3) (2026-10-17)
+
+
+### Bug Fixes
+
+* complete English and French product translations ([29579ee](https://github.com/pranavbhandare31/Wine_lable/commit/29579ee2f5d5bca05d1a27e2827784f26e3ec62e))
+
+## [1.0.2](https://github.com/pranavbhandare31/Wine_lable/compare/v1.0.1...v1.0.2) (2026-10-17)
+
+
+### Bug Fixes
+
+* add product ingredient relationships ([ddca2dd](https://github.com/pranavbhandare31/Wine_lable/commit/ddca2ddf576827148a5c916a754e894a06658b45))
+
+## [1.0.1](https://github.com/pranavbhandare31/Wine_lable/compare/v1.0.0...v1.0.1) (2026-10-17)
+
+
+### Bug Fixes
+
+* **db:** update createdBy column and schemas to support Clerk string user IDs ([142841c](https://github.com/pranavbhandare31/Wine_lable/commit/142841c0617aa3dabce52af641f7ef3d033de8db))
+
+# 1.0.0 (2026-10-17)
+
+
+### Bug Fixes
+
+* resolve wine e-label QR URL mismatch to public product route ([8ef8138](https://github.com/pranavbhandare31/Wine_lable/commit/8ef8138be82ca8246569ed6099f02d534b4484e7))
+
 ## [1.7.6](https://github.com/ixartz/SaaS-Boilerplate/compare/v1.7.5...v1.7.6) (2025-05-01)
 
 
