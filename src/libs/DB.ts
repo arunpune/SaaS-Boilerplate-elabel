@@ -32,16 +32,22 @@ if (process.env.NEXT_PHASE !== PHASE_PRODUCTION_BUILD && Env.DATABASE_URL) {
   const global = globalThis as unknown as { client: PGlite; drizzle: PgliteDatabase<typeof schema> };
 
   if (!global.client) {
-    global.client = new PGlite();
+    const isBuild = process.env.NEXT_PHASE === PHASE_PRODUCTION_BUILD || process.env.NODE_ENV === 'test';
+    const dataDir = isBuild
+      ? undefined
+      : (process.env.PGLITE_DATA_DIR || path.join(process.cwd(), '.pglite'));
+
+    global.client = dataDir ? new PGlite(dataDir) : new PGlite();
     await global.client.waitReady;
 
     global.drizzle = drizzlePglite(global.client, { schema });
+
+    await migratePglite(global.drizzle, {
+      migrationsFolder: path.join(process.cwd(), 'migrations'),
+    });
   }
 
   drizzle = global.drizzle;
-  await migratePglite(global.drizzle, {
-    migrationsFolder: path.join(process.cwd(), 'migrations'),
-  });
 }
 
 export const db = drizzle;

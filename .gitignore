@@ -1,51 +1,44 @@
-# See https://help.github.com/articles/ignoring-files/ for more about ignoring files.
-
-# dependencies
-/node_modules
+# Dependencies
+node_modules/
 /.pnp
 .pnp.js
 
-# Database
-*.db
-
-# testing
+# Testing
 /coverage
 
-# storybook
-storybook-static
-*storybook.log
+# Next.js
+/.next/
+/out/
+/build/
+dist/
 
-# playwright
-/test-results/
-/playwright-report/
-/playwright/.cache/
+# Local databases
+/.pglite/
+/local-db/
+*.sqlite
+*.sqlite3
+*.db
 
-# next.js
-/.next
-/out
+# Environment files
+.env
+.env*.local
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
 
-# cache
-.swc/
-
-# production
-/build
-
-# misc
-.DS_Store
-*.pem
-Thumbs.db
-
-# debug
+# Debug
 npm-debug.log*
-pnpm-debug.log*
 yarn-debug.log*
 yarn-error.log*
+pnpm-debug.log*
 
-# local env files
-.env*.local
+# Python
+.venv/
+venv/
+__pycache__/
+*.pyc
 
-# local folder
-local
-
-# vercel
-.vercel
+# System files
+.DS_Store
+Thumbs.db
